@@ -1,7 +1,7 @@
 {
   "name": "fl0w",
   "description": "Flow control for Node streams",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "WOW! Group Development <oss@wow-group.com>",
   "license": "MIT",
   "repository": {
