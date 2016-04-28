@@ -70,4 +70,27 @@ describe('when', function() {
       done();
     });
   });
+
+  it('passes errors along', function(done) {
+    var err;
+
+    function test() {
+      _([
+        {
+          type: 'bar',
+          msg: 'hello'
+        }
+      ])
+      .pipe(when('type', {
+        'bar': _.pipeline(_.doto(function(x) {
+          throw new Error('oh no');
+        }))
+      }))
+      .errors(function(e) { err = e; })
+      .done(done);
+    }
+
+    expect(test).to.not.throw(Error);
+    expect(err).to.eql(new Error('oh no'));
+  });
 });

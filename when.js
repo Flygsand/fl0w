@@ -2,6 +2,11 @@
 
 var _ = require('highland');
 
+function StreamError(err) {
+  this.error = err;
+  this.__HighlandStreamError__ = true;
+}
+
 module.exports = function(f, cases) {
   var g = typeof f === 'string' ? function(x) { return x[f]; } : f
     , streams = {};
@@ -21,9 +26,14 @@ module.exports = function(f, cases) {
   }
 
   function pipeAll(dest) {
+    function writeErr(err) {
+      dest.write(new StreamError(err));
+    }
+
     for (var c in streams) {
       if (streams.hasOwnProperty(c)) {
         streams[c].pipe(dest);
+        streams[c].on('error', writeErr);
       }
     }
   }
